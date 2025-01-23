@@ -11,7 +11,7 @@ gem "jbuilder"
 # Use Redis adapter to run Action Cable in production
 gem "redis", ">= 4.0.1"
 gem "sidekiq", "~> 7.3"
-gem "sidekiq-cron", "~> 1.12"
+gem "sidekiq-cron", "~> 2.1"
 gem "httparty"
 gem "bunny", "~> 2.20", ">= 2.20.3"
 gem "dotenv", require: "dotenv/load"

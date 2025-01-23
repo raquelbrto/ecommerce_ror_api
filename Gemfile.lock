@@ -90,6 +90,9 @@ GEM
     concurrent-ruby (1.3.5)
     connection_pool (2.5.0)
     crass (1.0.6)
+    cronex (0.15.0)
+      tzinfo
+      unicode (>= 0.4.4.5)
     csv (3.3.2)
     date (3.4.1)
     debug (1.10.0)
@@ -276,10 +279,11 @@ GEM
       logger
       rack (>= 2.2.4)
       redis-client (>= 0.22.2)
-    sidekiq-cron (1.12.0)
-      fugit (~> 1.8)
+    sidekiq-cron (2.1.0)
+      cronex (>= 0.13.0)
+      fugit (~> 1.8, >= 1.11.1)
       globalid (>= 1.0.1)
-      sidekiq (>= 6)
+      sidekiq (>= 6.5.0)
     sidekiq-unique-jobs (8.0.10)
       concurrent-ruby (~> 1.0, >= 1.0.5)
       sidekiq (>= 7.0.0, < 8.0.0)
@@ -300,6 +304,7 @@ GEM
     timeout (0.4.3)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    unicode (0.4.4.5)
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
@@ -338,7 +343,7 @@ DEPENDENCIES
   redis (>= 4.0.1)
   rubocop-rails-omakase
   sidekiq (~> 7.3)
-  sidekiq-cron (~> 1.12)
+  sidekiq-cron (~> 2.1)
   sidekiq-unique-jobs
   sqlite3 (>= 1.4)
   tzinfo-data
