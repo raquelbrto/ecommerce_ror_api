@@ -4,7 +4,7 @@ class ExchangeService
     @exchange_cache = Cache.new
   end
 
-  def self.perform
+  def self.get_exchange_rate
     exchange_rate = @exchange_client.exchange_rate
     rate = exchange_rate["rate"]
     @exchange_cache.set("exchange_rate", rate.to_s, 60)
