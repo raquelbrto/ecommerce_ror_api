@@ -13,5 +13,6 @@ class FidelityService
   private
 
   def fallback_process_bonus(user_id, amount)
+    ProcessBonusWorker.perform_async(user_id, amount)
   end
 end
