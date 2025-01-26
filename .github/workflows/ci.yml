@@ -58,7 +58,7 @@ jobs:
       #   options: --health-cmd "pg_isready -U postgres" --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-     - name: Set up Docker
+      - name: Set up Docker
         run: |
           sudo apt-get update
           sudo apt-get install -y docker.io
@@ -85,7 +85,6 @@ jobs:
         run: |
           docker-compose -f docker-compose.yml build
 
-      # Etapa para verificar se os containers estão funcionando corretamente
       - name: Start Docker containers
         run: |
           docker-compose -f docker-compose.yml up -d
