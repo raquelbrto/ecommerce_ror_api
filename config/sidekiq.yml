@@ -1,0 +1,6 @@
+:concurrency: 27
+:queues:
+  - process_bonus
+  - process_transaction
+:redis:
+  :url: redis://redis:6379/0
