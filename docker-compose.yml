@@ -7,36 +7,34 @@ services:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
     ports:
-      - "5672:5672"        # Porta para conexões
-      - "15672:15672"      # RabbitMQ Management UI
+      - "5672:5672"
+      - "15672:15672"
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "ping"]
-      interval: 10s        # Intervalo entre checagens
-      timeout: 5s          # Timeout da checagem
-      retries: 5           # Número de tentativas
-      start_period: 10s    # Tempo para começar as checagens
+      interval: 10s
+      retries: 5
+      start_period: 10s
+      timeout: 5s
     networks:
       - default
 
-  # db:
-  #   image: postgres:15
-  #   container_name: postgres
-  #   environment:
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: password
-  #     POSTGRES_DB: my_app_development
-  #   ports:
-  #     - "5432:5432"
-  #   networks:
-  #     - default
-
-  redis:
-    image: redis:7
-    container_name: redis
+  db:
+    image: postgres:13
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ecommerce_db
     ports:
-      - "6379:6379"
+      - "5432:5432"
     networks:
       - default
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+      timeout: 5s
 
   app:
     image: ruby:3.2.1
@@ -44,24 +42,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - .:/app
-    working_dir: /app
+    command: ["sh", "-c", "sleep 10 && bundle exec rails server -b 0.0.0.0 -p 3001"]
     depends_on:
       rabbitmq:
-        condition: service_healthy # Espera o RabbitMQ ficar saudável
-      redis:
-        condition: service_started
-      # db:
-      #   condition: service_started
+        condition: service_healthy
+      db:
+        condition: service_healthy
     environment:
-      # DATABASE_URL: postgres://postgres:password@db:5432/my_app_development
-      REDIS_URL: redis://redis:6379/0
+      DATABASE_URL: postgres://postgres:password@db:5432/ecommerce_db
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
-      PORT: 3001
     ports:
       - "3001:3001"
-    command: bundle exec rails server -b 0.0.0.0 -p 3001
     networks:
       - default
 
@@ -70,20 +61,15 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: sidekiq
+    command: ["sh", "-c", "sleep 10 && bundle exec sidekiq"]
     depends_on:
       rabbitmq:
-        condition: service_healthy # Espera o RabbitMQ ficar saudável
-      redis:
-        condition: service_started
-      # db:
-      #   condition: service_started
-    volumes:
-      - .:/app
+        condition: service_healthy
+      db:
+        condition: service_healthy
     environment:
-      DATABASE_URL: postgres://postgres:password@db:5432/my_app_development
-      REDIS_URL: redis://redis:6379/0
+      DATABASE_URL: postgres://postgres:password@db:5432/ecommerce_db
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
-    command: bundle exec sidekiq
     networks:
       - default
 
