@@ -74,14 +74,14 @@ jobs:
         run: |
           until nc -zv rabbitmq 5672; do
             echo "Waiting for RabbitMQ..."
-            sleep 2
+            sleep 5
           done
 
       - name: Wait for PostgreSQL to be ready
         run: |
           until nc -zv postgres 5432; do
             echo "Waiting for PostgreSQL..."
-            sleep 2
+            sleep 5
           done
 
       - name: Run tests
