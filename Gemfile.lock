@@ -178,6 +178,7 @@ GEM
     parser (3.3.7.0)
       ast (~> 2.4.1)
       racc
+    pg (1.5.9)
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
@@ -337,6 +338,7 @@ DEPENDENCIES
   httparty
   jbuilder
   oj
+  pg
   pry (~> 0.14.2)
   puma (>= 5.0)
   rails (~> 7.2.2, >= 7.2.2.1)
