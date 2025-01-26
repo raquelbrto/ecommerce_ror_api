@@ -70,6 +70,16 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
+          # Etapa para construir os containers Docker
+      - name: Build Docker containers
+        run: |
+          docker-compose -f docker-compose.yml build
+
+      # Etapa para verificar se os containers estão funcionando corretamente
+      - name: Start Docker containers
+        run: |
+          docker-compose -f docker-compose.yml up -d
+
       - name: Wait for RabbitMQ to be ready
         run: |
           until nc -zv rabbitmq 5672; do
