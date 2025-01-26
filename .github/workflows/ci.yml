@@ -58,8 +58,8 @@ jobs:
         options: --health-cmd "pg_isready -U postgres" --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 libvips sqlite3
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 libvips sqlite3 netcat
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -69,6 +69,20 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
+
+      - name: Wait for RabbitMQ to be ready
+        run: |
+          until nc -zv rabbitmq 5672; do
+            echo "Waiting for RabbitMQ..."
+            sleep 2
+          done
+
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          until nc -zv postgres 5432; do
+            echo "Waiting for PostgreSQL..."
+            sleep 2
+          done
 
       - name: Run tests
         run: bundle exec rails test
